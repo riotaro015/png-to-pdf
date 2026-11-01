@@ -11,88 +11,97 @@
 main{max-width:1120px;margin:44px auto;padding:0 28px}header{margin-bottom:26px}.eyebrow{color:var(--rose);font-size:12px;font-weight:800;letter-spacing:.13em}h1{font-size:clamp(28px,5vw,44px);line-height:1.35;margin:10px 0 12px;letter-spacing:-.03em}p{margin:0}button,input,select{font:inherit;color:inherit}button,.button{border:1px solid var(--line);background:#fff;border-radius:14px;padding:10px 17px;cursor:pointer;text-decoration:none;display:inline-block;font-weight:700}button:hover,.button:hover{background:var(--pink)}button:disabled{opacity:.45;cursor:default}button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid #a64e59;outline-offset:3px}
 .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;background:linear-gradient(110deg,#fff0dc,#fde2e7);padding:20px;border-radius:24px}.toolbar .spacer{flex:1}.toolbar small{color:#715e56}.layout{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:20px 0}.card{border:1px solid var(--line);border-radius:24px;background:#fff;overflow:hidden}.pages{height:330px;overflow:auto;padding:14px;list-style:none;margin:0}.empty{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;min-height:290px;text-align:center;color:var(--muted);padding:20px}.empty strong{font-size:19px;color:var(--ink)}.row{display:flex;gap:9px;align-items:center;border-radius:13px;padding:10px;cursor:grab;border:2px solid transparent;margin-bottom:4px}.row:hover{background:#fff5ed}.row.active{background:var(--pink)}.row.over{border-color:var(--rose)}.number{color:var(--rose);font-size:12px;min-width:23px}.name{flex:1;min-width:0;overflow-wrap:anywhere;font-size:14px}.row button{padding:4px 9px;font-weight:400;border-radius:9px}.preview{height:330px;display:flex;align-items:center;justify-content:center;background:repeating-conic-gradient(#fff 0% 25%,#faf5f0 0% 50%) 50%/20px 20px;padding:20px}.preview img{display:block;max-width:100%;max-height:100%;object-fit:contain;box-shadow:0 3px 14px #493d3914}.preview span{color:var(--muted)}.caption{padding:10px 20px;border-top:1px solid var(--line);color:var(--muted);font-size:12px;min-height:42px;overflow-wrap:anywhere}.drop.dragging{outline:3px dashed var(--rose);outline-offset:5px}.settings{padding:22px;margin-bottom:20px}h2{font-size:17px;margin:0 0 16px}.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}.field label,.field>span{display:block;font-size:12px;font-weight:700;margin-bottom:6px}.field select,.field input:not([type=file]){width:100%;background:#fffaf7;border:1px solid var(--line);border-radius:12px;padding:10px;min-height:45px}.field input[type=file]{width:100%;font-size:12px}.pair{display:flex;align-items:center;gap:8px}.note{font-size:12px;color:var(--muted);margin-top:12px}.note a,footer a{color:var(--rose)}[hidden]{display:none!important}.actions{display:flex;gap:15px;align-items:center;flex-wrap:wrap}.primary{background:var(--rose);color:white;border-color:var(--rose);padding:13px 30px}.primary:hover{background:#b44e5d}.status{flex:1;min-width:180px;font-size:14px}#download{background:#fff0dc}progress{width:100%;accent-color:var(--rose);height:7px;margin-top:14px}.error{color:#af3144}footer{display:flex;justify-content:space-between;gap:20px;margin-top:28px;color:var(--muted);font-size:12px}summary{cursor:pointer;font-weight:700}details{margin-top:16px}details p{font-size:12px;color:var(--muted);margin-top:8px}.remove{color:#ae5561}.busy{pointer-events:none;opacity:.65}
 .file-size{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding:18px 22px;margin-bottom:18px}.file-size .label{font-size:12px;color:var(--muted);margin-bottom:3px}.file-size strong{font-size:20px}.file-size small{color:var(--muted)}
+.steps{display:flex;gap:10px;margin:0 0 22px}.steps button{flex:1;background:transparent;border-color:transparent;font-size:14px;padding:12px 8px;color:var(--muted)}.steps button[aria-current=step]{background:var(--pink);color:#a74755}.wizard-nav{display:flex;justify-content:space-between;margin-top:22px}.caption:empty,.status:empty,.file-size small:empty{display:none}.output-summary{font-size:14px;margin:0 0 18px;color:var(--muted)}
 @media(max-width:700px){main{margin:26px auto;padding:0 17px}.layout{grid-template-columns:1fr}.pages{height:260px}.preview{height:220px}.fields{grid-template-columns:1fr 1fr}.toolbar{padding:15px}.toolbar button{padding:9px 12px;font-size:13px}.toolbar small{width:100%}.field.wide{grid-column:1/-1}footer{flex-direction:column;gap:5px}.row button{padding:5px 10px}}
 @media(prefers-reduced-motion:no-preference){button,a{transition:background .15s}}
 </style>
 </head>
 <body>
 <main>
-  <header><div class="eyebrow">PNG TO PDF · BROWSER EDITION</div><h1>PNGをひとつのPDFに</h1><p>画像を並べて、色とサイズをそろえて保存。変換はすべて端末の中で。</p></header>
+  <header><h1>PNG → PDF</h1></header>
   <div id="editor">
+    <nav class="steps" aria-label="手順"><button type="button" data-step="1" aria-current="step">STEP 1　PNG追加</button><button type="button" data-step="2" disabled>STEP 2　出力設定</button><button type="button" data-step="3" disabled>STEP 3　保存</button></nav>
+    <section id="step1" class="step-panel" aria-label="STEP 1 PNG追加">
     <div class="toolbar">
       <button id="add" type="button">PNGを追加</button><button id="folder" type="button">フォルダーを追加</button><button id="sort" type="button">数字順に整列</button><button id="clear" type="button">クリア</button><span class="spacer"></span><small id="count">0ページ</small>
       <input id="files" type="file" accept="image/png,.png" multiple hidden><input id="folders" type="file" accept="image/png,.png" webkitdirectory multiple hidden>
     </div>
     <div class="layout">
       <section class="card drop" id="drop" aria-label="PNG一覧とドロップ領域">
-        <ol id="list" class="pages"></ol><div class="caption">上から順にPDF化 · ドラッグ／↑↓で並べ替え</div>
+        <ol id="list" class="pages"></ol>
       </section>
-      <section class="card"><div class="preview" id="preview"><span>ここに元画像のプレビューを表示</span></div><div class="caption" id="previewCaption">出力時の色・サイズ変換はプレビューに反映しません</div></section>
+      <section class="card"><div class="preview" id="preview"><span>元画像</span></div><div class="caption" id="previewCaption"></div></section>
     </div>
-    <section class="card settings">
-      <h2>まとめて適用する設定</h2>
+    </section>
+    <section id="step2" class="step-panel card settings" aria-label="STEP 2 出力設定" hidden>
       <div class="fields">
         <div class="field"><label for="color">表現色</label><select id="color"><option value="rgb">RGB（sRGB）</option><option value="gray">グレースケール（8bit）</option><option value="cmyk">CMYK（ICCで変換）</option></select></div>
         <div class="field"><label for="size">出力サイズ</label><select id="size"><option value="longedge">長辺のpxをそろえる</option><option value="original">元の画素数を保持</option></select></div>
         <div class="field"><label for="dpi">解像度（dpi）</label><input id="dpi" type="number" min="36" max="1200" step="1" value="300" required></div>
         <div class="field" id="dimensions"><label for="longEdge">長辺（px）</label><input id="longEdge" type="number" aria-label="長辺px" min="1" max="16000" step="1" value="2400" required></div>
-        <div class="field wide" id="iccField" hidden><label for="icc">変換先のCMYK ICCプロファイル（必須）</label><input id="icc" type="file" accept=".icc,.icm"><p class="note">印刷所指定の .icc／.icm を選択。変換先ICCはPDFに必ず埋め込みます。</p></div>
+        <div class="field wide" id="iccField" hidden><label for="icc">CMYK ICCプロファイル</label><input id="icc" type="file" accept=".icc,.icm"></div>
       </div>
-      <p class="note" id="sizeNote">画素数は変えず、dpiで印刷サイズを決めます。元画像のdpi情報は使いません。</p>
       <p class="note" id="estimate"></p>
-      <details><summary>色と解像度について</summary><p>RGBはブラウザーでsRGBに変換し、sRGBのICCを埋め込みます。CMYKはsRGBから選択したICCへ変換し、相対的色域を維持＋黒点補正を使います。グレースケールは明るさから算出した8bitの1チャンネル画像です。PNG内の透明部分は白になります。</p><p>長辺のpxをそろえる場合、縦横比を保って拡大・縮小し、余白や切り抜きは加えません。短辺は画像の比率に応じて変わります（1px未満の端数は丸めます）。小さい画像も指定長辺まで拡大しますが、元にない細部は増えません。dpiは出力画素数から印刷サイズを決める値です。すべて8bitで処理し、PDF/X・塗り足し・トンボには対応しません。16bit PNGも8bitになります。</p><p>多数の高解像度画像はメモリーを多く使います。1ページは最大8,000万画素、1辺16,000pxまで。CMYKのICCや画像は外部へ送信しません。PDFライブラリはjsDelivr、CMYK変換時のみLittleCMSのWASMもjsDelivrから読み込みます。</p></details>
     </section>
   </div>
-  <section class="card file-size" aria-label="ファイル容量"><div><div class="label">入力PNGの合計</div><strong id="inputSize">0 B</strong></div><div aria-live="polite"><div class="label">できあがるPDFの容量</div><strong id="outputSize">未作成</strong></div><small id="sizeHelp">PDFを作成すると、保存前に実際の容量を確認できます。</small></section>
-  <div class="actions"><button id="save" class="primary" type="button" disabled>PDFを作成・容量を確認</button><a id="download" class="button" hidden>PDFをダウンロード</a><span id="status" class="status" role="status" aria-live="polite">PNGやフォルダーを一覧へドロップしてください。</span></div>
+  <section id="step3" class="step-panel" aria-label="STEP 3 保存" hidden>
+  <p id="outputSummary" class="output-summary"></p>
+  <section class="card file-size" aria-label="ファイル容量"><div><div class="label">PNG容量</div><strong id="inputSize">0 B</strong></div><div aria-live="polite"><div class="label">PDF容量</div><strong id="outputSize">未作成</strong></div><small id="sizeHelp"></small></section>
+  <div class="actions"><button id="save" class="primary" type="button" disabled>PDFを作成</button><a id="download" class="button" hidden>PDFをダウンロード</a></div>
   <progress id="progress" value="0" max="1" hidden></progress>
-  <footer><span>画像のアップロードなし · アカウント不要</span><a href="https://github.com/riotaro015/png-to-pdf" target="_blank" rel="noopener">ソースコード・デスクトップ版 ↗</a></footer>
+  </section>
+  <p id="status" class="status" role="status" aria-live="polite"></p>
+  <div class="wizard-nav"><button id="back" type="button" disabled>戻る</button><button id="next" class="primary" type="button" disabled>次へ</button></div>
+  <footer><a href="https://github.com/riotaro015/png-to-pdf" target="_blank" rel="noopener">GitHub ↗</a></footer>
   <noscript>このアプリを使うにはJavaScriptを有効にしてください。</noscript>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js" crossorigin="anonymous"></script>
 <script type="module">
 const $ = id => document.getElementById(id);
 const collator = new Intl.Collator('ja', {numeric:true, sensitivity:'base'});
-const state = {items:[], selected:null, busy:false, downloadURL:null};
+const state = {items:[], selected:null, busy:false, downloadURL:null, step:1};
 let nextID = 1, dragged = null, cmsPromise;
 // The sRGB matrix/TRC ICC is generated by Qt's QColorSpace(SRgb).
 const SRGB_BASE64 = 'AAAB4AAAAAAEQAAAbW50clJHQiBYWVogAAAAAAAAAAAAAAAAYWNzcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPbWAAEAAAAA0y1RdAYLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKclhZWgAAAPwAAAAUZ1hZWgAAARAAAAAUYlhZWgAAASQAAAAUd3RwdAAAATgAAAAUY3BydAAAAUwAAAAiY2hhZAAAAXAAAAAsclRSQwAAAZwAAAAgZ1RSQwAAAZwAAAAgYlRSQwAAAZwAAAAgZGVzYwAAAbwAAAAkWFlaIAAAAAAAAG+fAAA49AAAA5FYWVogAAAAAAAAYpYAALeHAAAY3FhZWiAAAAAAAAAkoQAAD4UAALbTWFlaIAAAAAAAAPNPAAEAAAABFsJtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAYAAAAcAE4ALwBBAABzZjMyAAAAAAABDEAAAAXd///zKgAAB5IAAP2P///7ov///aMAAAPaAADAh3BhcmEAAAAAAAMAAAACZmYAAPKnAAANWQAAE9AAAApbbWx1YwAAAAAAAAABAAAADGVuVVMAAAAIAAAAHABzAFIARwBC';
 function message(text, error=false) { $('status').textContent=text; $('status').classList.toggle('error',error); }
 function formatBytes(bytes){if(bytes<1000)return `${bytes} B`;if(bytes<1000000)return `${(bytes/1000).toFixed(1)} KB`;return `${(bytes/1000000).toFixed(2)} MB`;}
-function invalidate() { if(state.downloadURL) URL.revokeObjectURL(state.downloadURL); state.downloadURL=null; $('download').hidden=true; $('outputSize').textContent='未作成';$('sizeHelp').textContent='PDFを作成すると、保存前に実際の容量を確認できます。'; }
+function invalidate() { if(state.downloadURL) URL.revokeObjectURL(state.downloadURL); state.downloadURL=null; $('download').hidden=true; $('outputSize').textContent='未作成';$('sizeHelp').textContent=''; }
 function number(id, min, max) { const v=Number($(id).value); if(!Number.isFinite(v)||v<min||v>max) throw new Error(`${$(id).getAttribute('aria-label')||$(id).previousElementSibling?.textContent||id}は${min}〜${max}で指定してください。`); return v; }
+function updateWizard(){if(!state.items.length)state.step=1;for(let i=1;i<=3;i++)$('step'+i).hidden=state.step!==i;document.querySelectorAll('[data-step]').forEach(button=>{const step=Number(button.dataset.step);button.disabled=state.busy||(step>1&&!state.items.length);if(step===state.step)button.setAttribute('aria-current','step');else button.removeAttribute('aria-current');});$('back').disabled=state.busy||state.step===1;$('next').hidden=state.step===3;$('next').disabled=state.busy||!state.items.length;$('outputSummary').textContent=`${state.items.length}ページ · ${$('color').selectedOptions[0].textContent} · ${$('size').value==='longedge'?'長辺 '+$('longEdge').value+'px':'元の画素数'} · ${$('dpi').value}dpi`;}
+function goToStep(step){if(state.busy||(step>1&&!state.items.length))return;if(step===3){try{number('dpi',36,1200);if($('size').value==='longedge')number('longEdge',1,16000);if($('color').value==='cmyk'&&!$('icc').files[0])throw new Error('CMYK ICCプロファイルを選択してください。');}catch(error){state.step=2;updateWizard();$('estimate').textContent=error.message;return;}}state.step=step;message('');updateWizard();document.querySelector(`[data-step="${step}"]`).focus();}
+document.querySelectorAll('[data-step]').forEach(button=>button.onclick=()=>goToStep(Number(button.dataset.step)));$('back').onclick=()=>goToStep(state.step-1);$('next').onclick=()=>goToStep(state.step+1);
 function dimensions(w,h) {const dpi=number('dpi',36,1200);if($('size').value==='longedge'){const edge=Math.round(number('longEdge',1,16000)),scale=edge/Math.max(w,h);w=Math.max(1,Math.round(w*scale));h=Math.max(1,Math.round(h*scale));}return {w,h,ptW:w*72/dpi,ptH:h*72/dpi};}
 function checkDimensions(d) { if(d.w>16000||d.h>16000||d.w*d.h>80000000) throw new Error('出力サイズが大きすぎます。1辺16,000px・8,000万画素以下になるようサイズかdpiを下げてください。'); }
 function estimate() {
-  try {const item=state.items.find(x=>x.id===state.selected); if(!item?.width){$('estimate').textContent='';return;}const d=dimensions(item.width,item.height);$('estimate').textContent=`選択ページの出力：${d.w.toLocaleString()} × ${d.h.toLocaleString()} px ／ ${(d.ptW/72*25.4).toFixed(1)} × ${(d.ptH/72*25.4).toFixed(1)} mm`;}
+  try {const item=state.items.find(x=>x.id===state.selected); if(!item?.width){$('estimate').textContent='';return;}const d=dimensions(item.width,item.height);$('estimate').textContent=`出力：${d.w.toLocaleString()} × ${d.h.toLocaleString()} px ／ ${(d.ptW/72*25.4).toFixed(1)} × ${(d.ptH/72*25.4).toFixed(1)} mm`;}
   catch(e){$('estimate').textContent=e.message;}
 }
 function showPreview() {
   $('preview').replaceChildren(); const item=state.items.find(x=>x.id===state.selected);
-  if(!item){const span=document.createElement('span');span.textContent='ここに元画像のプレビューを表示';$('preview').append(span);$('previewCaption').textContent='出力時の色・サイズ変換はプレビューに反映しません';estimate();return;}
+  if(!item){const span=document.createElement('span');span.textContent='元画像';$('preview').append(span);$('previewCaption').textContent='';estimate();return;}
   const image=new Image();image.alt=item.file.name; image.onload=()=>{item.width=image.naturalWidth;item.height=image.naturalHeight;if(state.selected===item.id){$('previewCaption').textContent=`${item.file.name} · ${item.width.toLocaleString()} × ${item.height.toLocaleString()} px（元画像）`;estimate();}};image.onerror=()=>message(`${item.file.name} を表示できません。`,true);image.src=item.url;$('preview').append(image);
 }
 function move(id,delta) {const i=state.items.findIndex(x=>x.id===id),j=i+delta;if(j<0||j>=state.items.length)return;[state.items[i],state.items[j]]=[state.items[j],state.items[i]];invalidate();render();}
 function render() {
   $('list').replaceChildren(); $('count').textContent=`${state.items.length}ページ`;$('save').disabled=!state.items.length||state.busy;$('inputSize').textContent=formatBytes(state.items.reduce((sum,item)=>sum+item.file.size,0));
-  if(!state.items.length){const li=document.createElement('li');li.className='empty';const title=document.createElement('strong');title.textContent='PNGをここへドロップ';const hint=document.createElement('span');hint.textContent='または「PNGを追加」から選択';li.append(title,hint);$('list').append(li);}
+  if(!state.items.length){const li=document.createElement('li');li.className='empty';const title=document.createElement('strong');title.textContent='PNGをドロップ';li.append(title);$('list').append(li);}
   state.items.forEach((item,i)=>{const li=document.createElement('li');li.className='row'+(item.id===state.selected?' active':'');li.draggable=true;
     const num=document.createElement('span');num.className='number';num.textContent=String(i+1).padStart(2,'0');const name=document.createElement('span');name.className='name';name.textContent=item.file.name;name.title=item.file.webkitRelativePath||item.file.name;
     li.append(num,name);for(const [label,text,handler,disabled] of [['前へ','↑',()=>move(item.id,-1),i===0],['後へ','↓',()=>move(item.id,1),i===state.items.length-1],['削除','×',()=>{URL.revokeObjectURL(item.url);state.items=state.items.filter(x=>x.id!==item.id);if(state.selected===item.id)state.selected=state.items[0]?.id;invalidate();render();showPreview();},false]]){const button=document.createElement('button');button.type='button';button.textContent=text;button.setAttribute('aria-label',`${item.file.name} を${label}`);button.disabled=disabled;button.addEventListener('click',e=>{e.stopPropagation();handler();});li.append(button);}
     li.tabIndex=0;li.setAttribute('aria-label',`${i+1}ページ目 ${item.file.name}`);const select=()=>{state.selected=item.id;render();showPreview();};li.addEventListener('click',select);li.addEventListener('keydown',e=>{if(e.target===li&&(e.key==='Enter'||e.key===' ')){e.preventDefault();select();}});
     li.addEventListener('dragstart',e=>{dragged=item.id;e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',String(item.id));});li.addEventListener('dragend',()=>{dragged=null;document.querySelectorAll('.over').forEach(x=>x.classList.remove('over'));});li.addEventListener('dragover',e=>{if(dragged!==null){e.preventDefault();li.classList.add('over');}});li.addEventListener('dragleave',()=>li.classList.remove('over'));li.addEventListener('drop',e=>{if(dragged===null)return;e.preventDefault();e.stopPropagation();const from=state.items.findIndex(x=>x.id===dragged),to=state.items.findIndex(x=>x.id===item.id);if(from<0||to<0)return;const [moved]=state.items.splice(from,1);state.items.splice(to,0,moved);dragged=null;invalidate();render();});$('list').append(li);
-  });estimate();
+  });estimate();updateWizard();
 }
 function addFiles(files) {
   if(state.busy)return;const keys=new Set(state.items.map(x=>x.key));const accepted=Array.from(files).filter(f=>/\.png$/i.test(f.name)).sort((a,b)=>collator.compare(a.webkitRelativePath||a.name,b.webkitRelativePath||b.name));let added=0;
   for(const file of accepted){const key=`${file.webkitRelativePath||file.name}:${file.size}:${file.lastModified}`;if(keys.has(key))continue;keys.add(key);state.items.push({id:nextID++,file,key,url:URL.createObjectURL(file)});added++;}
-  if(added){invalidate();state.selected??=state.items[0].id;render();showPreview();message(`${added}枚追加しました。`);}else message('新しく追加できるPNGがありません。');
+  if(added){invalidate();state.selected??=state.items[0].id;render();showPreview();message('');}else message('新しく追加できるPNGがありません。');
 }
 $('add').onclick=()=>$('files').click();$('folder').onclick=()=>$('folders').click();for(const id of ['files','folders'])$(id).onchange=e=>{addFiles(e.target.files);e.target.value='';};
-$('sort').onclick=()=>{state.items.sort((a,b)=>collator.compare(a.file.name,b.file.name));invalidate();render();};$('clear').onclick=()=>{for(const item of state.items)URL.revokeObjectURL(item.url);state.items=[];state.selected=null;invalidate();render();showPreview();message('PNGを追加してください。');};
+$('sort').onclick=()=>{state.items.sort((a,b)=>collator.compare(a.file.name,b.file.name));invalidate();render();};$('clear').onclick=()=>{for(const item of state.items)URL.revokeObjectURL(item.url);state.items=[];state.selected=null;invalidate();render();showPreview();message('');};
 async function droppedEntry(entry) {if(entry.isFile)return [await new Promise((resolve,reject)=>entry.file(resolve,reject))];if(entry.isDirectory){const reader=entry.createReader(),found=[];while(true){const entries=await new Promise((resolve,reject)=>reader.readEntries(resolve,reject));if(!entries.length)break;for(const child of entries)found.push(...await droppedEntry(child));}return found;}return [];}
 window.addEventListener('dragover',e=>{e.preventDefault();if(e.dataTransfer.types.includes('Files')&&!state.busy)$('drop').classList.add('dragging');});window.addEventListener('dragleave',e=>{if(!e.relatedTarget)$('drop').classList.remove('dragging');});window.addEventListener('drop',async e=>{e.preventDefault();$('drop').classList.remove('dragging');if(state.busy||!e.dataTransfer.types.includes('Files'))return;try{const entries=Array.from(e.dataTransfer.items||[]).map(x=>x.webkitGetAsEntry?.()).filter(Boolean);if(entries.length){const result=[];for(const entry of entries)result.push(...await droppedEntry(entry));addFiles(result);}else addFiles(e.dataTransfer.files);}catch(error){message(`追加できません：${error.message}`,true);}});
-function settingsChanged() {invalidate();$('iccField').hidden=$('color').value!=='cmyk';$('dimensions').hidden=$('size').value==='original';$('sizeNote').textContent=$('size').value==='original'?'画素数は変えず、dpiで印刷サイズを決めます。元画像のdpi情報は使いません。':'全ページの長辺だけを指定pxに統一。縦横比を保ち、余白・切り抜きは加えません。dpiで印刷サイズを決めます。';estimate();}
+function settingsChanged() {invalidate();$('iccField').hidden=$('color').value!=='cmyk';$('dimensions').hidden=$('size').value==='original';estimate();updateWizard();}
 for(const id of ['color','size','dpi','longEdge','icc'])$(id).addEventListener('input',settingsChanged);
 async function cmsEngine(){cmsPromise??=import('https://cdn.jsdelivr.net/npm/lcms-wasm@1.0.5/dist/lcms.js').then(async module=>({api:module,engine:await module.instantiate({locateFile:()=> 'https://cdn.jsdelivr.net/npm/lcms-wasm@1.0.5/dist/lcms.wasm'})})).catch(e=>{cmsPromise=null;throw new Error(`色変換ライブラリを読み込めません。通信を確認してください。${e.message}`);});return cmsPromise;}
 async function makeCMYK(profileBytes) {
@@ -109,7 +118,7 @@ async function createPDF(){
   if(state.busy||!state.items.length)return;let converter=null;
   try {
     if(!window.PDFLib)throw new Error('PDFライブラリを読み込めません。通信を確認してページを再読み込みしてください。');number('dpi',36,1200);const mode=$('color').value;const iccFile=$('icc').files[0];if(mode==='cmyk'&&!iccFile)throw new Error('変換先のCMYK ICCファイルを選択してください。');
-    state.busy=true;invalidate();$('editor').classList.add('busy');$('editor').inert=true;$('save').disabled=true;$('progress').hidden=false;$('progress').max=state.items.length;$('progress').value=0;
+    state.busy=true;updateWizard();invalidate();$('editor').classList.add('busy');$('editor').inert=true;$('save').disabled=true;$('progress').hidden=false;$('progress').max=state.items.length;$('progress').value=0;
     const L=window.PDFLib,doc=await L.PDFDocument.create();doc.setCreator('PNG to PDF Browser Edition');doc.setTitle('PNG to PDF');let colorSpace=L.PDFName.of('DeviceGray');
     if(mode!=='gray'){
       let profileBytes;if(mode==='cmyk'){message('ICCプロファイルを読み込んでいます…');profileBytes=new Uint8Array(await iccFile.arrayBuffer());if(profileBytes.length<128||profileBytes.length>20000000)throw new Error('ICCファイルのサイズが不正です。');converter=await makeCMYK(profileBytes);}else profileBytes=Uint8Array.from(atob(SRGB_BASE64),c=>c.charCodeAt(0));
@@ -122,8 +131,8 @@ async function createPDF(){
       const image=await readImage(item.file),d=dimensions(image.naturalWidth,image.naturalHeight);checkDimensions(d);
       const canvas=document.createElement('canvas');canvas.width=d.w;canvas.height=d.h;const ctx=canvas.getContext('2d',{colorSpace:'srgb',willReadFrequently:true});if(!ctx)throw new Error('画像処理を開始できません。');ctx.fillStyle='#fff';ctx.fillRect(0,0,d.w,d.h);ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';ctx.drawImage(image,0,0,d.w,d.h);const rgba=ctx.getImageData(0,0,d.w,d.h).data;let pixels=mode==='gray'?toGray(rgba):toRGB(rgba);if(converter)pixels=converter.convert(pixels);addRaster(doc,pixels,d,colorSpace);canvas.width=canvas.height=0;$('progress').value=i+1;
     }
-    message('PDFをまとめています…');const bytes=await doc.save();state.downloadURL=URL.createObjectURL(new Blob([bytes],{type:'application/pdf'}));const link=$('download');link.href=state.downloadURL;link.download=`${state.items[0].file.name.replace(/\.png$/i,'')}_まとめ.pdf`;link.hidden=false;$('outputSize').textContent=formatBytes(bytes.byteLength);$('sizeHelp').textContent=`${bytes.byteLength.toLocaleString()} バイト · ${state.items.length}ページ · 生成済みPDFの実際の容量`;message(`${state.items.length}ページのPDFができました。容量を確認してダウンロードできます。`);
-  }catch(error){message(`作成できません：${error.message||error}`,true);}finally{converter?.close();state.busy=false;$('editor').classList.remove('busy');$('editor').inert=false;$('save').disabled=!state.items.length;$('progress').hidden=true;}
+    message('PDFをまとめています…');const bytes=await doc.save();state.downloadURL=URL.createObjectURL(new Blob([bytes],{type:'application/pdf'}));const link=$('download');link.href=state.downloadURL;link.download=`${state.items[0].file.name.replace(/\.png$/i,'')}_まとめ.pdf`;link.hidden=false;$('outputSize').textContent=formatBytes(bytes.byteLength);$('sizeHelp').textContent=`${bytes.byteLength.toLocaleString()} バイト · ${state.items.length}ページ`;message('作成完了');
+  }catch(error){message(`作成できません：${error.message||error}`,true);}finally{converter?.close();state.busy=false;$('editor').classList.remove('busy');$('editor').inert=false;$('save').disabled=!state.items.length;$('progress').hidden=true;updateWizard();}
 }
 $('save').onclick=createPDF;
 render();settingsChanged();
