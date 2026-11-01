@@ -76,6 +76,12 @@ def export_pdf(paths, destination, paper='image', dpi=300, progress=None):
             image = reader.read()
             if image.isNull():
                 raise ValueError(f'画像を読み込めません: {Path(path).name}\n{reader.errorString()}')
+            if paper != 'a4':
+                sides = (image.width() * 72 / dpi, image.height() * 72 / dpi)
+                if min(sides) < 3:
+                    raise ValueError(f'PDFページが小さすぎます: {Path(path).name}\nDPIを下げるか、A4を選んでください。')
+                if max(sides) > 14400:
+                    raise ValueError(f'PDFページが大きすぎます: {Path(path).name}\nDPIを上げるか、A4を選んでください。')
             if paper == 'a4':
                 page = QPageSize(QPageSize.PageSizeId.A4)
             else:

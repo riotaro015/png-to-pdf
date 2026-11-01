@@ -79,12 +79,12 @@ function updateWizard(){if(!state.items.length)state.step=1;$('stepPosition').te
 function goToStep(step){if(state.busy||(step>1&&!state.items.length))return;if(step===3){try{number('dpi',36,1200);if($('size').value==='longedge')number('longEdge',1,16000);if($('color').value==='cmyk'&&!$('icc').files[0])throw new Error('CMYK ICCプロファイルを選択してください。');}catch(error){state.step=2;updateWizard();$('estimate').textContent=error.message;return;}}state.step=step;message('');updateWizard();document.querySelector(`[data-step="${step}"]`).focus();}
 document.querySelectorAll('[data-step]').forEach(button=>button.onclick=()=>goToStep(Number(button.dataset.step)));$('back').onclick=()=>goToStep(state.step-1);$('next').onclick=()=>goToStep(state.step+1);
 function dimensions(w,h) {const dpi=number('dpi',36,1200);if($('size').value==='longedge'){const edge=Math.round(number('longEdge',1,16000)),scale=edge/Math.max(w,h);w=Math.max(1,Math.round(w*scale));h=Math.max(1,Math.round(h*scale));}return {w,h,ptW:w*72/dpi,ptH:h*72/dpi};}
-function checkDimensions(d) { if(d.w>16000||d.h>16000||d.w*d.h>80000000) throw new Error('出力サイズが大きすぎます。1辺16,000px・8,000万画素以下になるようサイズかdpiを下げてください。'); }
+function checkDimensions(d) { if(d.w>16000||d.h>16000||d.w*d.h>80000000) throw new Error('出力サイズが大きすぎます。1辺16,000px・8,000万画素以下になるようサイズかdpiを下げてください。');if(d.ptW<3||d.ptH<3)throw new Error('PDFページが小さすぎます。長辺pxを増やすか、dpiを下げてください。');if(d.ptW>14400||d.ptH>14400)throw new Error('PDFページが大きすぎます。長辺pxを減らすか、dpiを上げてください。'); }
 function rotatedSize(w,h,rotation=0){return rotation%180===0?{w,h}:{w:h,h:w};}
 function drawRotated(ctx,image,w,h,rotation=0){ctx.save();ctx.translate(w/2,h/2);ctx.rotate(rotation*Math.PI/180);const swap=rotation%180!==0;const width=swap?h:w,height=swap?w:h;ctx.drawImage(image,-width/2,-height/2,width,height);ctx.restore();}
 function rotateItem(id){const item=state.items.find(x=>x.id===id);if(!item||state.busy)return;item.rotation=((item.rotation||0)+90)%360;state.selected=id;invalidate();render();showPreview();}
 function estimate() {
-  try {const item=state.items.find(x=>x.id===state.selected); if(!item?.width){$('estimate').textContent='';return;}const size=rotatedSize(item.width,item.height,item.rotation);const d=dimensions(size.w,size.h);$('estimate').textContent=`出力：${d.w.toLocaleString()} × ${d.h.toLocaleString()} px ／ ${(d.ptW/72*25.4).toFixed(1)} × ${(d.ptH/72*25.4).toFixed(1)} mm`;}
+  try {const item=state.items.find(x=>x.id===state.selected); if(!item?.width){$('estimate').textContent='';return;}const size=rotatedSize(item.width,item.height,item.rotation);const d=dimensions(size.w,size.h);checkDimensions(d);$('estimate').textContent=`出力：${d.w.toLocaleString()} × ${d.h.toLocaleString()} px ／ ${(d.ptW/72*25.4).toFixed(1)} × ${(d.ptH/72*25.4).toFixed(1)} mm`;}
   catch(e){$('estimate').textContent=e.message;}
 }
 function showPreview() {
